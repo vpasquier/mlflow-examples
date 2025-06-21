@@ -17,15 +17,13 @@ services:
     ports:
       - "3000:3000"
     working_dir: /app
-    user: root
+    volumes:
+      - ./main.py:/app/main.py
     environment:
       - MLFLOW_TRACKING_URI=http://localhost:3000
-    volumes:
-      - /Users/vpasquier/vlad/mlflow-examples/mlruns:/mlruns:rw
     command: >
-      sh -c "mkdir -p /mlruns && chmod -R 777 /mlruns && mlflow server --backend-store-uri
-      postgresql+psycopg2://mlflow_user:mlflow_pass@postgres/mlflow_db --default-artifact-root /mlruns --host 0.0.0.0
-      --port 3000"
+      sh -c "mlflow server --backend-store-uri postgresql+psycopg2://mlflow_user:mlflow_pass@postgres/mlflow_db --host
+      0.0.0.0 --port 3000"
 
 volumes:
   pgdata:
