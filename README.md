@@ -1,17 +1,17 @@
-# ML Flows
+# ML Tools Spikes
 
-## Get started
+## MLFlow Only
 
 ### With embedded Mlflow server
 
 ```bash
-mlflow ui
+mlflow ui -p 3000
 ```
 
 In another shell window:
 
 ```bash
-python main.py
+python mlflow-only.py
 ```
 
 ### With Docker compose
@@ -33,7 +33,7 @@ docker exec -it $(docker ps -q | head -n 1) bash
 - Run the script:
 
 ```bash
-python main.py
+python mlflow-only.py
 ```
 
 - Open browser to `localhost:3000`
