@@ -2,7 +2,21 @@
 
 ## Get started
 
-- Run MLFlow:
+### With embedded Mlflow server
+
+```bash
+mlflow ui
+```
+
+In another shell window:
+
+```bash
+python main.py
+```
+
+### With Docker compose
+
+- Run MLFlow
 
 ```bash
 docker-compose up --build
