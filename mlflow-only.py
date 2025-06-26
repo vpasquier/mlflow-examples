@@ -1,5 +1,6 @@
 import mlflow
 import mlflow.sklearn
+import mlflow.data
 import pandas as pd
 from sklearn import datasets
 from sklearn.linear_model import LogisticRegression
@@ -16,6 +17,18 @@ mlflow.set_experiment("MLflow test")
 with mlflow.start_run():
     # Load the Iris dataset
     X, y = datasets.load_iris(return_X_y=True)
+    
+    # Create a DataFrame for dataset tracking
+    iris_data = pd.DataFrame(X, columns=datasets.load_iris().feature_names)
+    iris_data['target'] = y
+    
+    # Create a Dataset object for tracking
+    dataset = mlflow.data.from_pandas(
+        iris_data,
+        source="sklearn.datasets.load_iris",
+        name="iris-dataset",
+        targets="target"
+    )
 
     # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.9, random_state=25)
@@ -32,6 +45,16 @@ with mlflow.start_run():
         "multi_class": "multinomial", # Explicitly using multinomial strategy
         "random_state": 8888
     }
+
+    # Log the dataset to the MLflow run
+    mlflow.log_input(dataset, context="training")
+    
+    # Log dataset metadata
+    mlflow.log_param("dataset_name", dataset.name)
+    mlflow.log_param("dataset_source", dataset.source)
+    mlflow.log_param("dataset_rows", iris_data.shape[0])
+    mlflow.log_param("dataset_columns", iris_data.shape[1])
+    mlflow.log_param("target_column", "target")
 
     # Train the model
     lr = LogisticRegression(**params)

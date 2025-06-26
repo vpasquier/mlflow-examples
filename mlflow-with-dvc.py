@@ -10,6 +10,7 @@ from sklearn.linear_model import ElasticNet
 from urllib.parse import urlparse
 import mlflow
 import mlflow.sklearn
+import mlflow.data
 
 import logging
 
@@ -44,6 +45,14 @@ if __name__ == "__main__":
     # read the wine-qualtiy csv file from remote repository
     data = pd.read_csv(data_url, sep=",")
 
+    # Create a Dataset object for tracking
+    dataset = mlflow.data.from_pandas(
+        data, 
+        source=data_url, 
+        name="wine-quality-dvc", 
+        targets="quality"
+    )
+
     # Split the data into training and test sets. (0.75, 0.25) split.
     train, test = train_test_split(data)
     # The predicted column is "quality" which is a scalar from [3, 9]
@@ -57,11 +66,17 @@ if __name__ == "__main__":
 
     with mlflow.start_run():
 
+        # Log the dataset to the MLflow run
+        mlflow.log_input(dataset, context="training")
+
         # Log data params
         mlflow.log_param('data_url', data_url)
         mlflow.log_param('data_version', version)
         mlflow.log_param('input_rows', data.shape[0])
         mlflow.log_param('input_columns', data.shape[1])
+        mlflow.log_param('dataset_name', dataset.name)
+        mlflow.log_param('dataset_source', dataset.source)
+        mlflow.log_param('target_column', 'quality')
         
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
         lr.fit(train_x, train_y)
