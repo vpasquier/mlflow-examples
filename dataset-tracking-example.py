@@ -26,7 +26,7 @@ print(f"Columns: {list(raw_data.columns)}")
 
 # Create a Dataset object
 dataset = mlflow.data.from_pandas(
-    raw_data, source=dataset_source_url, name="wine-quality-white", targets="quality"
+    raw_data, source=dataset_source_url, name="wine-quality-white-v2", targets="quality"
 )
 
 print(f"Created MLflow dataset: {dataset.name}")

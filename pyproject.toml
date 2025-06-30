@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "dvc>=3.60.1",
+    "google-cloud-aiplatform>=1.100.0",
     "ipykernel>=6.29.5",
+    "kfp>=2.13.0",
     "mlflow>=3.1.0",
     "pandas>=2.3.0",
     "scikit-learn>=1.7.0",
